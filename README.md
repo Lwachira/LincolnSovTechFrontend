@@ -17,6 +17,11 @@ Sadly No Heroku Instance (I struggled for a few hours but DotNet was being super
 
     Git Clone https://github.com/Lwachira/LincolnSovTechFrontend.git
     CD to LincolnSovTechFrontend
-    dotnet restore
+    dotnet restore (It should run on port 5001)
     dotnet run
     Fingers Crossed (Use the Heroku Instace instead)
+
+## Tiny Caveats 
+
+For security purposes I made the application only accept from a handful of 
+address (CORS is annoying)
