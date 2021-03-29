@@ -23,5 +23,11 @@ Sadly No Heroku Instance (I struggled for a few hours but DotNet was being super
 
 ## Tiny Caveats 
 
-For security purposes I made the application only accept from a handful of 
-address (CORS is annoying)
+For security purposes I made the Backend API only accept from a handful of 
+address (CORS is annoying), which are :
+- "https://localhost:44367"
+- "https://localhost:5001"
+- "https://localhost:44387"
+
+You may need to change the ssl port in the launchSettings.json Which can be found 
+in Properties (LincolnSovTechFrontend\Properties)
