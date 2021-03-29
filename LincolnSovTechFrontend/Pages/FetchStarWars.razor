@@ -1,0 +1,56 @@
+﻿
+@page "/fetchstarwars"
+@inject HttpClient Http
+
+<h3>Fetch Star Wars</h3>
+<h4>List of Star Wars Characters</h4>
+
+@if (starPeople != null)
+{
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>height</th>
+                <th>Mass</th>
+                <th>Birth Year</th>
+                <th>Gender</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in starPeople.Results)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Height</td>
+                    <td>@item.Mass</td>
+                    <td>@item.Birth_year</td>
+                    <td>@item.Gender</td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+
+
+
+}
+else
+{
+    <p><em>Loading...</em></p>
+}
+
+
+@code {
+
+    private SwapiResult starPeople;
+
+    protected override async Task OnInitializedAsync()
+    {
+        swaggerClient client = new swaggerClient("https://lincolnsovtech.herokuapp.com", Http);
+        starPeople = await client.PeopleAsync();
+
+    }
+
+}

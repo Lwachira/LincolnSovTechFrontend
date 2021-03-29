@@ -1,0 +1,111 @@
+﻿
+@page "/fetchchuck"
+@inject HttpClient Http
+
+<h3>Fetch Chuck</h3>
+<h4>List of Category</h4>
+
+@if (chuckCategory != null)
+{
+    <div class="list-group">
+        @foreach (var item in chuckCategory)
+        {
+            <button type="button" class="list-group-item list-group-item-light" @onclick="@(e => SetupJoke(e, item))">
+                Click for @item joke
+            </button>
+        }
+    </div>
+}
+else
+{
+    <p><em>Loading...</em></p>
+
+}
+
+@if (theJoke != null)
+{
+
+    <div class="p-1">
+        <h4>The Punchline</h4>
+
+    </div>
+
+    if (theJoke.Categories.First() == "animal")
+    {
+        <div class="alert alert-primary" role="alert">
+            @theJoke.Value
+        </div>
+    }
+    else if (theJoke.Categories.First() == "career")
+    {
+        <div class="alert alert-secondary" role="alert">
+            @theJoke.Value
+        </div>
+    }
+    else if (theJoke.Categories.First() == "dev")
+    {
+        <div class="alert alert-success" role="alert">
+            @theJoke.Value
+        </div>
+    }
+    else if (theJoke.Categories.First() == "explicit")
+    {
+        <div class="alert alert-danger" role="alert">
+            @theJoke.Value
+        </div>
+    }
+    else if (theJoke.Categories.First() == "fashion")
+    {
+        <div class="alert alert-warning" role="alert">
+            @theJoke.Value
+        </div>
+    }
+    else if (theJoke.Categories.First() == "food")
+    {
+        <div class="alert alert-info" role="alert">
+            @theJoke.Value
+        </div>
+    }
+
+    else
+    {
+        <div class="alert alert-dark" role="alert">
+            @theJoke.Value
+        </div>
+
+    }
+
+
+}
+
+
+
+@code {
+    private ICollection<string> chuckCategory;
+    private Joke theJoke;
+
+    protected override async Task OnInitializedAsync()
+    {
+        swaggerClient client = new swaggerClient("https://lincolnsovtech.herokuapp.com", Http);
+
+        chuckCategory = await client.CategoriesAsync();
+
+    }
+
+
+    private void SetupJoke(MouseEventArgs e, string value)
+    {
+        var category = value;
+
+        var jokeTask = LandJoke(value);
+
+    }
+
+    private async Task LandJoke(string category)
+    {
+        swaggerClient client = new swaggerClient("https://lincolnsovtech.herokuapp.com", Http);
+
+        theJoke = await client.RandomAsync(category);
+    }
+
+}

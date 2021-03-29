@@ -1,0 +1,142 @@
+﻿
+@page "/fetchsearch"
+@using System.ComponentModel.DataAnnotations;
+
+@inject HttpClient Http
+
+<h3>Loogle</h3>
+<h4>Lincoln's Search Engnine</h4>
+
+
+
+<EditForm Model="@searchModel" OnValidSubmit="@HandleValidSubmit">
+
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <button type="submit" class="btn btn-outline-secondary">Submit Search</button>
+
+        </div>
+        <InputText id="name" @bind-Value="searchModel.Name" class="form-control" />
+
+    </div>
+</EditForm>
+
+
+@if (search != null)
+{
+
+
+    if (search.ChuckResult != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Origin</th>
+                    <th>Category</th>
+                    <th>Value</th>
+                    <th>Created_at</th>
+                    <th>Updated_at</th>
+                    <th>Url</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in search.ChuckResult.Result)
+                {
+                    <tr>
+                        <td>@search.ChuckResult.Origin</td>
+                        <td>@item.Categories.FirstOrDefault()</td>
+                        <td>@item.Value</td>
+                        <td>@item.Created_at</td>
+                        <td>@item.Updated_at</td>
+                        <td>@item.Url</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p><em>Loading...</em></p>
+    }
+
+
+    if (search.SwapiResult != null)
+    {
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>Origin</th>
+                    <th>Name</th>
+                    <th>height</th>
+                    <th>Mass</th>
+                    <th>Birth Year</th>
+                    <th>Gender</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in search.SwapiResult.Results)
+                {
+                    <tr>
+                        <td>@search.SwapiResult.Origin</td>
+                        <td>@item.Name</td>
+                        <td>@item.Height</td>
+                        <td>@item.Mass</td>
+                        <td>@item.Birth_year</td>
+                        <td>@item.Gender</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p><em>Loading...</em></p>
+
+    }
+
+
+}
+else
+{
+    <p><em>Search For Something...</em></p>
+
+}
+
+@code {
+
+    private SearchModel searchModel = new SearchModel();
+
+    private SearchResult search;
+
+
+
+    private void HandleValidSubmit()
+    {
+        string name = searchModel.Name;
+
+
+        var getSearch = SearchResult(name);
+
+    }
+
+
+    private async Task<SearchResult> SearchResult(string searchString)
+    {
+
+        swaggerClient client = new swaggerClient("https://lincolnsovtech.herokuapp.com", Http);
+        search = await client.SearchAsync(searchString);
+        return search;
+
+    }
+
+    public class SearchModel
+    {
+        [Required]
+        [StringLength(10, ErrorMessage = "Name is too long.")]
+        public string Name { get; set; }
+    }
+
+
+}
